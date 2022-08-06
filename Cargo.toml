@@ -7,3 +7,14 @@ description = "A native GUI framework for Neutron Arc, based on Yew"
 license-file = "LICENSE"
 
 [dependencies]
+winit = "0.27"
+env_logger = "0.9"
+log = "0.4"
+wgpu = "0.13"
+half = "2.1.0"
+derive-new = "0.5.9"
+wgpu-types = "0.13.2"
+
+[features]
+default = ["wgpu"]
+wgpu = []
