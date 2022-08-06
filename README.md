@@ -1,3 +1,3 @@
 # Arcen
 
-A native GUI framework for neutron, based on Yew
+A native GUI framework for Neutron (ARC), based on Yew

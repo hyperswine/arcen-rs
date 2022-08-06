@@ -3,7 +3,7 @@ name = "arcen"
 version = "0.1.0"
 edition = "2021"
 authors = ["Jason Qin"]
-description = "A native GUI framework for neutron, based on Yew"
+description = "A native GUI framework for Neutron Arc, based on Yew"
 license-file = "LICENSE"
 
 [dependencies]
