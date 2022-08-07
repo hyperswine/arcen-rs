@@ -1,4 +1,4 @@
-use crate::types::{Vec3b, Vec4fh};
+use crate::types::{Vec2fh, Vec3b, Vec4fh};
 
 pub type Padding = Vec4fh;
 pub type Borders = Vec4fh;
@@ -23,6 +23,47 @@ pub struct Text {
     font: Font,
 }
 
+// positions are calculated relative to a root position base
+// which can be defined as anything you want
+// on arcdesktop, it is the top left corner (0,0), similar to html/css
+
+#[repr(C)]
+#[derive(Debug)]
+pub enum PositionType {
+    Relative,
+    Absolute,
+}
+
+#[repr(C)]
+#[derive(Debug)]
+pub struct Position {
+    position_type: PositionType,
+    position: Vec2fh,
+}
+
+#[repr(C)]
+#[derive(Debug)]
+pub enum ContentAlignment {
+    Start,
+    Center,
+    End,
+}
+
+#[repr(C)]
+#[derive(Debug)]
+pub enum ContentSpacing {
+    Around,
+    Between,
+    Even,
+}
+
+#[repr(C)]
+#[derive(Debug)]
+pub enum Axis {
+    Row,
+    Col,
+}
+
 #[repr(C)]
 #[derive(Debug)]
 pub struct Node {
@@ -32,8 +73,13 @@ pub struct Node {
     color: ColorRGB,
     text: Text,
     image: Image,
+    position: Position,
 
+    // Maybe have an Option<> for these
     children: Vec<Node>,
+    children_axis: Axis,
+    children_alignment: ContentAlignment,
+    children_spacing: ContentSpacing,
 }
 
 // Each node has a certain set of characteristics. Like the CSS box model, everything in arcen is a container. And the container may container subcontainers
