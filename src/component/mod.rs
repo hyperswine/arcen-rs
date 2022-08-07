@@ -7,6 +7,8 @@
 
 use crate::renderer::node::Node;
 
+// Maybe make a derive(Node) instead, with an into_node() method
+
 pub struct Box(Node);
 
 pub struct Flex(Node);
@@ -16,3 +18,5 @@ pub struct Heading(Node);
 pub struct Text(Node);
 
 pub struct Image(Node);
+
+pub struct Component;
