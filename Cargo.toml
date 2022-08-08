@@ -14,6 +14,7 @@ wgpu = "0.13"
 half = "2.1.0"
 derive-new = "0.5.9"
 wgpu-types = "0.13.2"
+logos = "0.12.1"
 
 [features]
 default = ["wgpu"]
