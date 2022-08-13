@@ -4,7 +4,7 @@ A native GUI framework for Neutron (ARC), based on Yew.
 
 ## Architecture
 
-Like Yew, Arcen uses a declarative framework with `.rsx` files. Which are an extension to rust modules. Instead of being a normal module. It is parsed differently, namely its functions. At first, functions marked with `#[component]` are expanded to become structs. But later on, the functions marked with `#[component]` are actually treated as special VDOM elements. And like functions, called each time some state changes.
+Like Yew, Arcen uses a declarative framework with `.rx` files. Which are an extension to rust modules. Instead of being a normal module. It is parsed differently, namely its functions. At first, functions marked with `#[component]` are expanded to become structs. But later on, the functions marked with `#[component]` are actually treated as special VDOM elements. And like functions, called each time some state changes.
 
 ## Structure
 
