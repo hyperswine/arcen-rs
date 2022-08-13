@@ -6,16 +6,15 @@ title: Grammar
 ## Spec
 
 ```rust
-xml: tag
+rx: "rx" ~ rx_scope
 
-tag: "<" ~ tag_params ~ ">" | tag_one_line
-tag_one_line: "<" ~ tag_params ~ "/>"
-tag_end: "</" ~ tag_name ~ ">"
-tag_params: tag_name ~ tag_attribute*
-tag_attribute: key ~ ("=" ~ attribute_val)?
-attribute_val: "{" ~ expr ~ "}"
+rx_scope: "{" ~ expr ~ "}"
 
-tag_content: text | expr
+expr: ident ~ params? ~ "{" ~ expr ~ "}" | expr
 
-text: "\w+"
+params: "(" ~ param_expr ~ ")"
+
+param_expr: ident ~ "=" ~ attr
+
+attr: rust_var | literal | rust_expr
 ```
