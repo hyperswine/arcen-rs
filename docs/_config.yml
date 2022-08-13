@@ -1,0 +1,7 @@
+remote_theme: just-the-docs/just-the-docs
+
+aux_links:
+  "Github":
+    - "//github.com/hyperswine/arcen"
+
+footer_content: "Arcen UI"
