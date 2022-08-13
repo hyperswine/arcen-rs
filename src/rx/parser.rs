@@ -1,5 +1,6 @@
 // Maybe build.rs can run this function to expand
 
+use log::debug;
 use logos::Logos;
 use std::ops::Range;
 

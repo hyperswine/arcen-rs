@@ -10,4 +10,8 @@ pub mod rx;
 pub mod types;
 pub use prelude::*;
 
+// USE
+#[macro_use]
+extern crate macro_rules_attribute;
+
 pub fn start_arcen() {}
