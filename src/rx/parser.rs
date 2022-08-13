@@ -76,6 +76,67 @@ impl Parser {
             input_string,
         }
     }
+
+    /// Get the next symbol. Prob shouldn't be used
+    pub fn next_sym(&mut self) {
+        self.curr_index += 1;
+    }
+
+    /// Peek at current token without incrementing. Prob shouldn't be used
+    pub fn peek(&mut self, token: Token) -> Result<String, Token> {
+        let t = &self.tokens[self.curr_index];
+
+        if token == t.0 {
+            let res = Ok(self.input_string[t.1.clone()].to_owned());
+            debug!("res = {:?}", res);
+
+            return res;
+        }
+
+        Err(t.0)
+    }
+
+    pub fn accept(&mut self, token: Token) -> Result<String, Token> {
+        let t = &self.tokens[self.curr_index];
+
+        if token == t.0 {
+            let res = Ok(self.input_string[t.1.clone()].to_owned());
+            debug!("res = {:?}", res);
+            self.next_sym();
+
+            return res;
+        }
+
+        Err(t.0)
+    }
+
+    /// Simply returns true or false
+    pub fn accept_ok(&mut self, token: Token) -> bool {
+        self.accept(token).is_ok()
+    }
+
+    pub fn expect(&mut self, token: Token) -> String {
+        match self.accept(token) {
+            Ok(t) => t,
+            Err(e) => {
+                panic!("Token \"{token:?}\" was not expected... \"{e:?}\" was the actual token")
+            }
+        }
+    }
+
+    pub fn log_tokens(&self) {
+        for token in &self.tokens {
+            log::info!("token = {:?}", token.0);
+            log::info!(" range = {:?}", token.1);
+        }
+    }
+
+    pub fn print_tokens(&self) {
+        for token in &self.tokens {
+            println!("token = {:?}", token.0);
+            println!(" range = {:?}", token.1);
+        }
+    }
 }
 
 // wait do I want to parse the beginning of {} as a token tree?
