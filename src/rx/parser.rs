@@ -4,29 +4,20 @@ use log::debug;
 use logos::Logos;
 use std::ops::Range;
 
-/// Parse rx
-pub fn parse_rx(rx: &str) {
-    // maybe a parse impl instead? for syn
-    // also proc_macro2 somewhere
-}
+use super::expr::ElementDef;
 
-// parse tags
-// any embedded rust {} blocks gets parsed by the macro engine that parses those specific blocks
-// each element becomes a struct with a render view
-// a render view is a partial spec that can be executed by the cpu or gpu compute unit to create the command buffer to actually render that somewhere
-
-// Everything is a node
-// <Something> gets converted into a node
-// <Something attr={}> attr
-
-// logos => match <> angle brackets maybe
-// and </>
-// then parse the actual identifier
-
-// #[logos(subpattern xdigit = r"[0-9a-fA-F]")]
-
-#[derive(Logos, Debug, PartialEq)]
+#[derive(Logos, Debug, PartialEq, Clone, Copy)]
 pub enum Token {
+    #[token("rx")]
+    Rx,
+    #[token("(")]
+    ParenthesisLeft,
+    #[token(")")]
+    ParenthesisRight,
+    #[token(",")]
+    Comma,
+    #[token("=")]
+    Equals,
     #[token("<")]
     AngleBracketLeft,
     #[token(">")]
@@ -43,8 +34,7 @@ pub enum Token {
     Float,
     #[regex("\"(?:[^\"]|\\.)*\"")]
     DoubleQuotedString,
-    // a literal should be either a double quoted string or int
-    #[regex("\x26")]
+    #[regex("\x00")]
     EOF,
 
     #[error]
@@ -128,26 +118,45 @@ impl Parser {
     pub fn log_tokens(&self) {
         for token in &self.tokens {
             log::info!("token = {:?}", token.0);
-            log::info!(" range = {:?}", token.1);
+            log::info!("range = {:?}", token.1);
         }
     }
 
     pub fn print_tokens(&self) {
         for token in &self.tokens {
             println!("token = {:?}", token.0);
-            println!(" range = {:?}", token.1);
+            println!("range = {:?}", token.1);
         }
     }
 }
 
-// wait do I want to parse the beginning of {} as a token tree?
-// how do I reuse rust's stuff? maybe
-// if you do that you wont get auto formatting
-// so you will have to modify rust-analyzer and rustfmt either way
-// unless using proc macro to expand the #[component]
-// but then cant use () rsx anywhere else like a let
+// PARSER
 
-// <Component attr={"Hi"}/>
-// <Component attr={var}/>
-// {} -> parse as rust scope stmt* expr* or tt*
-// take the span from {..}
+pub type ExprRes<T> = Result<T, Token>;
+
+macro_rules! expr_none {
+    () => {
+        Err(Token::EOF)
+    };
+}
+
+pub fn rx(parser: &mut Parser) -> ExprRes<ElementDef> {
+    // check for "rx"
+    parser.accept(Token::Rx)?;
+
+    expr_none!()
+}
+
+// a literal should be either a double quoted string or int
+pub fn literal(parser: &mut Parser) {}
+
+/// Parse tokens (e.g. an rx input string) into a rust string
+pub fn parse_to_rust(parser: &mut Parser) -> String {
+    // maybe a parse impl instead? for syn
+    // also proc_macro2 somewhere
+
+    // check if its rx'able
+
+    // otherwise, prob just rust. Hand off to rust parser
+    String::from("")
+}
