@@ -6,6 +6,9 @@ authors = ["Jason Qin"]
 description = "A native GUI framework for Neutron Arc, based on Yew"
 license-file = "LICENSE"
 
+[[example]]
+name = "parse"
+
 [dependencies]
 winit = "0.27"
 env_logger = "0.9"
