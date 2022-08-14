@@ -15,8 +15,15 @@ pub struct Flex(Node);
 
 pub struct Heading(Node);
 
-pub struct Text(Node);
+/// Mostly Sugar, becomes incorporated as attr.text instead of a 'child' node
+pub struct Text(String);
 
-pub struct Image(Node);
+impl Text {
+    // Change the text
+    pub fn text(&mut self) {}
+}
+
+/// Mostly Sugar, becomes incorporated as attr.image instead of a 'child' node
+pub struct Image(String);
 
 pub struct Component;
