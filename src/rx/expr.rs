@@ -5,6 +5,7 @@ pub enum Expr {
     Literal(Literal),
     ScopeExpr(Box<ScopeExpr>),
     RustExpr(Box<RustExpr>),
+    Identifier(String)
 }
 
 macro_rules! Expr {

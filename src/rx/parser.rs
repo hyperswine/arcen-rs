@@ -1,5 +1,5 @@
 // Maybe build.rs can run this function to expand
-use super::expr::{ElementDef, Expr, Literal, ScopeExpr};
+use super::expr::{Attribute, ElementDef, Expr, Literal, RustExpr, ScopeExpr};
 use super::token::Token;
 use crate::rust_expr;
 use log::debug;
@@ -120,17 +120,60 @@ macro_rules! expr_none {
     };
 }
 
+/// Top level rx blocks must start with @{}
+/// Maybe Ident {} would also be fine where Ident is a rust Ident
 pub fn rx(parser: &mut Parser) -> ExprRes<ElementDef> {
     // check for "@"
     parser.accept(Token::At)?;
 
+    // check for attributes (expression)
+
     // expect a scope expression
-    parser.expect(Token::CurlyBracketLeft);
+    let res = scope_expr(parser).unwrap();
 
-    // take what ever is in the scope, a list of child elements
+    let res = ElementDef {
+        attrs: todo!(),
+        children: todo!(),
+    };
 
-    parser.expect(Token::CurlyBracketRight);
+    Ok(res)
+}
 
+pub fn attributes(parser: &mut Parser) -> ExprRes<Vec<Attribute>> {
+    parser.accept(Token::ParenthesisLeft)?;
+
+    let mut attrs: Vec<Attribute> = vec![];
+
+    while let Ok(arg_ident) = parser.accept(Token::Identifier) {
+        // expect
+        parser.expect(Token::Equals);
+
+        // expect an expression like identifier, literal, or rust_expr
+        if let Ok(rust_expr) = rust_expr(parser) {
+            attrs.push(Attribute {
+                ident: arg_ident,
+                expr: rust_expr.into(),
+            })
+        } else if let Ok(identx) = parser.accept(Token::Identifier) {
+            attrs.push(Attribute {
+                ident: arg_ident,
+                expr: Expr::Identifier(identx),
+            })
+        } else {
+            let literal = literal(parser).unwrap();
+            attrs.push(Attribute {
+                ident: arg_ident,
+                expr: literal.into(),
+            })
+        }
+    }
+
+    parser.expect(Token::ParenthesisRight);
+
+    Ok(attrs)
+}
+
+pub fn rust_expr(parser: &mut Parser) -> ExprRes<RustExpr> {
     expr_none!()
 }
 
@@ -139,26 +182,6 @@ pub fn element_expr(parser: &mut Parser) -> ExprRes<ElementDef> {
 
     // if any params, take em
     if parser.accept_ok(Token::ParenthesisLeft) {
-        while let Ok(arg_ident) = parser.accept(Token::Identifier) {
-            // let val be the answer of the expression
-            // an arg's value should match its type. Which is usually a rust like type, either a single var, tuple or array
-            // it can be an rx expression, which is pretty much a literal, identifier or string
-            // or it can be a rust expression, which would highlighted by braces {}
-
-            // e.g. Box(height="2rem"), Box(h=2) are valid forms
-            // Box(height={var}) means you want to use a rust variable
-
-            // expect
-            parser.expect(Token::Equals);
-
-            if let Ok(scope) = scope_expr(parser) {
-                // interpret the expression body as a string
-            } else {
-                // an rx expression or prob just literal/ident
-                let val = literal(parser).unwrap();
-            }
-        }
-
         parser.expect(Token::ParenthesisRight);
     }
 
