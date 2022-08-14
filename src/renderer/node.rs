@@ -11,16 +11,19 @@ pub type ColorRGB = Vec3b;
 // Background color is not inherited, but color is
 // If image is specified, then tries to render the image in the container, over the background color and text
 
-pub type Font = String;
+pub type FontFamily = String;
+pub type FontSize = usize;
 /// An image is simply a wgpu Texture if using wgpu backend
 pub type Image = String;
 pub type Surface3D = String;
 
 #[repr(C)]
 #[derive(Debug)]
-pub struct Text {
-    text: String,
-    font: Font,
+pub struct Font {
+    // should be enum though string is fine for custom and future fonts
+    pub font_family: FontFamily,
+    // in pixels or %
+    pub font_size: FontSize,
 }
 
 // positions are calculated relative to a root position base
@@ -80,8 +83,11 @@ pub struct Node {
     pub borders: Borders,
     pub background_color: ColorRGB,
     pub color: ColorRGB,
-    pub text: Text,
-    pub image: Image,
+    pub font: Font,
+    /// Primitive value
+    pub text: Option<String>,
+    /// Primitive value, though could just be done at walkthrough time?
+    pub image: Option<Image>,
     pub position: Position,
     // An animation list
     pub animate: Vec<Animate>,
@@ -91,6 +97,10 @@ pub struct Node {
     pub children_axis: Axis,
     pub children_alignment: ContentAlignment,
     pub children_spacing: ContentSpacing,
+}
+
+impl Node {
+    pub fn view(&self) {}
 }
 
 // Each node has a certain set of characteristics. Like the CSS box model, everything in arcen is a container. And the container may container subcontainers
