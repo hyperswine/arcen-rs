@@ -66,20 +66,31 @@ pub enum Axis {
 
 #[repr(C)]
 #[derive(Debug)]
+pub struct Animate {
+    pub duration_seconds: f64,
+    pub translate_to: Vec2fh,
+    pub rotate_by: Vec2fh,
+    pub scale_by: Vec2fh,
+}
+
+#[repr(C)]
+#[derive(Debug)]
 pub struct Node {
-    padding: Padding,
-    borders: Borders,
-    background_color: ColorRGB,
-    color: ColorRGB,
-    text: Text,
-    image: Image,
-    position: Position,
+    pub padding: Padding,
+    pub borders: Borders,
+    pub background_color: ColorRGB,
+    pub color: ColorRGB,
+    pub text: Text,
+    pub image: Image,
+    pub position: Position,
+    // An animation list
+    pub animate: Vec<Animate>,
 
     // Maybe have an Option<> for these
-    children: Vec<Node>,
-    children_axis: Axis,
-    children_alignment: ContentAlignment,
-    children_spacing: ContentSpacing,
+    pub children: Vec<Node>,
+    pub children_axis: Axis,
+    pub children_alignment: ContentAlignment,
+    pub children_spacing: ContentSpacing,
 }
 
 // Each node has a certain set of characteristics. Like the CSS box model, everything in arcen is a container. And the container may container subcontainers
