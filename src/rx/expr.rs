@@ -4,6 +4,7 @@ pub enum Expr {
     ElementDef(Box<ElementDef>),
     Literal(Literal),
     ScopeExpr(Box<ScopeExpr>),
+    RustExpr(Box<RustExpr>),
 }
 
 macro_rules! Expr {
@@ -19,17 +20,22 @@ macro_rules! Expr {
 // KEY EXPRESSIONS
 
 /// An element can have a list of attributes and a list of child elements
+/// An RX Element has the form Ident Attributes? ScopeExpr
 #[derive(Debug, Expr!)]
 pub struct ElementDef {
     pub attrs: Vec<Attribute>,
     pub children: Vec<ElementDef>,
 }
 
-/// An attribute is a named parameter (instead of positional) and describes a property of the current node, and any child nodes that wish to inherit it
+/// An attribute is a named parameter (not "positional" like a function) and describes a property of the current node, and any child nodes that wish to inherit it
 /// Most normal attributes like position and stuff are implicitly passed to child elements
 /// Custom attributes can be passed down as 'properties' to child elements' attributes if the child element's attributes explicitly parametrise themselves with an attribute specified by their direct parent
 #[derive(Debug)]
-pub struct Attribute {}
+pub struct Attribute {
+    pub ident: String,
+    /// Most attribute expressions are simply literals & idents, which refer to rust constructs like enums, strings, and etc
+    pub expr: Expr,
+}
 
 // Maybe also add a way to bring up properties from child -> parent. And from grandparent -> child. Flutter uses keys, which ehh
 // Maybe also redux
@@ -62,6 +68,7 @@ macro_rules! rust_expr {
     };
 }
 
+/// A scope expression can either be part of a rx element or rust
 #[derive(Debug, Expr!)]
 pub struct ScopeExpr {
     pub expr: Expr,
@@ -73,4 +80,14 @@ impl ToString for ScopeExpr {
     fn to_string(&self) -> String {
         self.string.clone()
     }
+}
+
+#[derive(Debug, Expr!)]
+pub struct RustExpr {
+    pub string: String,
+}
+
+impl RustExpr {
+    /// Called on syn::parse, basically converts the input string into a token stream, and parses it to rust syntax
+    pub fn to_ast(&self) {}
 }
