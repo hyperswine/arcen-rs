@@ -1,55 +1,9 @@
 // Maybe build.rs can run this function to expand
-
-use log::debug;
-use logos::Logos;
-use std::ops::Range;
-
-use crate::rust_expr;
-
 use super::expr::{ElementDef, Expr, Literal, ScopeExpr};
-
-#[derive(Logos, Debug, PartialEq, Clone, Copy)]
-pub enum Token {
-    #[token("rx")]
-    Rx,
-    #[token("(")]
-    ParenthesisLeft,
-    #[token(")")]
-    ParenthesisRight,
-    #[token(",")]
-    Comma,
-    #[token("=")]
-    Equals,
-    #[token("<")]
-    AngleBracketLeft,
-    #[token(">")]
-    AngleBracketRight,
-    #[token("{")]
-    CurlyBracketLeft,
-    #[token("}")]
-    CurlyBracketRight,
-    #[regex(r"[_a-zA-Z]\w*")]
-    Identifier,
-    #[regex(r"-?[0-9]+")]
-    Int,
-    #[regex(r"-?([0-9]+\.[0-9]*|\.[0-9]+)")]
-    Float,
-    #[regex("\"(?:[^\"]|\\.)*\"")]
-    DoubleQuotedString,
-    #[regex("\x00")]
-    EOF,
-
-    #[error]
-    #[regex(r"[ \t\n\f]+", logos::skip)]
-    Whitespace,
-}
-
-impl Token {
-    pub fn tokenise(input: &str) -> Vec<(Token, Range<usize>)> {
-        let tokens = Token::lexer(input);
-        tokens.spanned().collect()
-    }
-}
+use super::token::Token;
+use crate::rust_expr;
+use log::debug;
+use std::ops::Range;
 
 pub struct Parser {
     tokens: Vec<(Token, Range<usize>)>,
@@ -167,8 +121,8 @@ macro_rules! expr_none {
 }
 
 pub fn rx(parser: &mut Parser) -> ExprRes<ElementDef> {
-    // check for "rx"
-    parser.accept(Token::Rx)?;
+    // check for "@"
+    parser.accept(Token::At)?;
 
     // expect a scope expression
     parser.expect(Token::CurlyBracketLeft);
@@ -218,6 +172,10 @@ pub fn expr(parser: &mut Parser) -> ExprRes<Expr> {
 
 pub fn scope_expr(parser: &mut Parser) -> ExprRes<ScopeExpr> {
     let start = parser.accept_index(Token::CurlyBracketLeft)?;
+
+    // theres no "commas" or in rx, everything is a self contained statement
+    // keep parsing statements, either identifiers, literals, or other rx_elements
+
     // expect a rust expr, although we could just expect whitespace and not deal with it
     // uhh, idk is it possible to invoke syn here for the next token?
     // we want either an identifier or a path or an expression
