@@ -19,6 +19,8 @@ derive-new = "0.5.9"
 wgpu-types = "0.13.2"
 logos = "0.12.1"
 macro_rules_attribute = "0.1.2"
+derive_more = "0.99"
+epaint = "0.18.1"
 
 [features]
 default = ["wgpu"]

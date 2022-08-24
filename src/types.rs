@@ -1,10 +1,13 @@
+use std::ops::Add;
+
+use derive_more::{Add, From};
 use derive_new::new;
 use half::f16;
 
 // Maybe need to make these structs for PartialEq, new, hash (for compression over net)
 
 #[repr(C)]
-#[derive(Debug, new)]
+#[derive(Debug, new, PartialEq, From)]
 pub struct Vec4f([f32; 4]);
 #[repr(C)]
 #[derive(Debug, new)]
@@ -54,3 +57,33 @@ pub struct Vec3b([u8; 3]);
 #[repr(C)]
 #[derive(Debug, new)]
 pub struct Vec2b([u8; 2]);
+
+// DERIVABLE ADD
+
+// Elementwise addition
+// macro_rules! Add {
+//     () => {
+
+//     };
+// }
+
+// #[derive(Debug)]
+// pub struct VecRx<T: Add, Mult, const S: usize> {
+//     data: [T; S]
+// }
+
+// impl<T, const S: usize> Iterator for VecRx<T, S> {
+//     type Item = VecRx<T, S>;
+
+//     fn next(&mut self) -> Option<Self::Item> {
+//         todo()
+//     }
+// }
+
+// impl<T, const S: usize> Add for VecRx<T, S> {
+//     type Output = VecRx<T, S>;
+
+//     fn add(self, rhs: Self) -> Self::Output {
+//         self.data.iter().zip(rhs).map(|(&i1, &i2)| i1 + i2).collect()
+//     }
+// }

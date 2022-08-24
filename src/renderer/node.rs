@@ -1,5 +1,7 @@
 use crate::types::{Vec2fh, Vec3b, Vec4fh};
 
+// ACTUALL USE epaint
+
 pub type Padding = Vec4fh;
 pub type Borders = Vec4fh;
 pub type ColorRGB = Vec3b;
@@ -33,7 +35,9 @@ pub struct Font {
 #[repr(C)]
 #[derive(Debug)]
 pub enum PositionType {
+    /// Default, relative to parent
     Relative,
+    /// Position offset from 0, 0 (root)
     Absolute,
 }
 
@@ -42,6 +46,13 @@ pub enum PositionType {
 pub struct Position {
     position_type: PositionType,
     position: Vec2fh,
+}
+
+impl Position {
+    pub fn get_position(&self, parent_pos: &Vec2fh) -> Vec2fh {
+        // if relative, add .w and .h
+        let res = self.position + parent_pos;
+    }
 }
 
 #[repr(C)]
