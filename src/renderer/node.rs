@@ -48,12 +48,12 @@ pub struct Position {
     position: Vec2fh,
 }
 
-impl Position {
-    pub fn get_position(&self, parent_pos: &Vec2fh) -> Vec2fh {
-        // if relative, add .w and .h
-        let res = self.position + parent_pos;
-    }
-}
+// impl Position {
+//     pub fn get_position(&self, parent_pos: &Vec2fh) -> Vec2fh {
+//         // if relative, add .w and .h
+//         let res = self.position + parent_pos;
+//     }
+// }
 
 #[repr(C)]
 #[derive(Debug)]

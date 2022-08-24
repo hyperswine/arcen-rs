@@ -13,15 +13,20 @@ name = "parse"
 winit = "0.27"
 env_logger = "0.9"
 log = "0.4"
-wgpu = "0.13"
+wgpu = { version = "0.13", optional = true }
 half = "2.1.0"
 derive-new = "0.5.9"
 wgpu-types = "0.13.2"
 logos = "0.12.1"
 macro_rules_attribute = "0.1.2"
 derive_more = "0.99"
-epaint = "0.18.1"
+epaint = "0.19.0"
+spirv-builder = { git = "https://github.com/EmbarkStudios/rust-gpu" }
+
+[target.'cfg(target_os = "macos")'.dependencies]
+ash-molten = { version = "0.13.0+1.1.10", features = ["pre-built"] }
 
 [features]
-default = ["wgpu"]
-wgpu = []
+default = ["rgpu"]
+wgpu = ["dep:wgpu"]
+rgpu = []
