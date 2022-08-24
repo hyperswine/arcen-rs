@@ -15,3 +15,11 @@ pub use prelude::*;
 extern crate macro_rules_attribute;
 
 pub fn start_arcen() {}
+
+// #[derive(Debug, StructOpt)]
+// #[structopt()]
+// pub struct Options {
+//     /// Use Vulkan debug layer (requires Vulkan SDK installed)
+//     #[structopt(short, long)]
+//     debug_layer: bool,
+// }
